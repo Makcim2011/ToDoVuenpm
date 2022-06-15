@@ -4,18 +4,17 @@
     <label>Додати нове завдання <input v-on:keyup.enter="addTask()" v-model="newTask"/></label>
     <button v-on:click="addTask()">Add Task</button>
     <p v-if="tasks.length">
-    <ul v-for="(task, key) in tasks" :key="task.key">
+    <ul v-for="(task, key) in tasks" :key="`task-${key}`">
       <li class="liTask">
         <input type="checkbox" v-model="task.completed">
         <p class="liTaskText"
         :class="{liTaskText_isShow: task.completed}"
         >{{task.text}}</p>
-        <button class="deleteBtn" v-on:click="removeTask(key)" role="button">&#10006;{{ key }}</button>
+        <button class="deleteBtn" v-on:click="removeTask(task.key)" role="button">&#10006;{{ `${key}` }}  |  {{task.key}}</button>
       </li>
     </ul>
     </p>
     <p v-else>Tere are no tasks yet</p>
-    <p>{{ tasks }}</p>
   </div>
 </template>
 
@@ -31,11 +30,14 @@ export default {
   },
   methods: {
     addTask() {
+      if(this.newTask !== '') {
       this.tasks.push({text: this.newTask, completed: false, key: Math.floor((Math.random() * 10e12) + 1)})
       this.newTask = ''
+      }
     },
-    removeTask(index) {
-      this.tasks.splice(index, 1)
+    removeTask(key) {
+      let indextask = obj => obj.key === key;
+      this.tasks.splice((this.tasks.findIndex(indextask)), 1)
     }
   },
   computed: {
