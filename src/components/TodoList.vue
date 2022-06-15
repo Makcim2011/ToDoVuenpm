@@ -1,14 +1,21 @@
 <template>
-  <div class="hello">
+  <div class="main">
     <div>{{ title }}</div>
-    <label>Додати нове завдання <input v-model="newTask"/></label>
+    <label>Додати нове завдання <input v-on:keyup.enter="addTask()" v-model="newTask"/></label>
     <button v-on:click="addTask()">Add Task</button>
     <p v-if="tasks.length">
-    <ul v-for="(task, key) in tasks" :key="`task-${key}`">
-    <li>{{task.text}}</li>
+    <ul v-for="(task, key) in tasks" :key="task.key">
+      <li class="liTask">
+        <input type="checkbox" v-model="task.completed">
+        <p class="liTaskText"
+        :class="{liTaskText_isShow: task.completed}"
+        >{{task.text}}</p>
+        <button class="deleteBtn" v-on:click="removeTask(key)" role="button">&#10006;{{ key }}</button>
+      </li>
     </ul>
     </p>
     <p v-else>Tere are no tasks yet</p>
+    <p>{{ tasks }}</p>
   </div>
 </template>
 
@@ -23,9 +30,20 @@ export default {
     }
   },
   methods: {
-    addTask: function() {
-      this.tasks.push({text: this.newTask, completed: false})
+    addTask() {
+      this.tasks.push({text: this.newTask, completed: false, key: Math.floor((Math.random() * 10e12) + 1)})
       this.newTask = ''
+    },
+    removeTask(index) {
+      this.tasks.splice(index, 1)
+    }
+  },
+  computed: {
+    completedTasks() {
+      return this.tasks.filter(task => task.completed)
+    },
+    incompleteTasks() {
+      return this.tasks.filter(task => !task.completed)
     }
   }
 }
@@ -33,19 +51,50 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+<style lang="scss">
+.main {
+  background-color: aquamarine;
+  min-height: 300px;
+  max-width: 500px;
+  margin: 10px;
+  width: 100%;
+  padding: 10px;
+  ul {
+  padding: auto;
+  }
+  .liTask{
+    border-radius: 15px;
+    background-color: aqua;
+    max-width: 400px;
+    list-style-type: none;
+    text-align: start;
+    margin-block-start: auto;
+    padding: 2px;
+    margin: 5px;
+    display: flex;
+    align-content: flex-start;
+    justify-content:start;
+    align-items: baseline;
+    .liTaskText{
+      padding-left: 1px;
+      max-width: fit-content;
+      margin: 0.5rem;
+      flex-shrink: 1;
+      flex-grow: 1;
+      text-align: start;
+      margin-left: 5px;
+
+      &_isShow {
+        text-decoration-line:line-through
+      }
+    }
+    .deleteBtn {
+      background-color: transparent;
+      border: none;
+      margin-right: 2px;
+      margin-left: auto;
+    }
+  }
+
 }
 </style>
