@@ -41,13 +41,24 @@ export default {
     }
   },
   computed: {
-    completedTasks() {
-      return this.tasks.filter(task => task.completed)
-    },
-    incompleteTasks() {
-      return this.tasks.filter(task => !task.completed)
-    }
+  // sortedtasks: function() {
+  //   function compare(a, b) {
+  //     if (a.completed < b.completed)
+  //       return -1;
+  //     if (a.completed > b.completed)
+  //       return 1;
+  //     return 0;
+  //   }
+
+    // return this.tasks.sort(compare);
   }
+    // completedTasks() {
+    //   return this.tasks.filter(task => task.completed)
+    // },
+    // incompleteTasks() {
+    //   return this.tasks.filter(task => !task.completed)
+    // }
+
 }
 
 </script>
