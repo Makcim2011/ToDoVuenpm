@@ -7,7 +7,7 @@
     <p v-if="tasks.length">
     <ul v-for="task in sortedtasks" :key="task.key">
       <li class="liTask">
-        <input type="checkbox" v-model="task.completed" @change="saveTasks()">
+        <input type="checkbox" v-model="task.completed">
         <p class="liTaskText"
         :class="{liTaskText_isShow: task.completed}"
         >{{task.text}}</p>
@@ -38,22 +38,25 @@ export default {
       }
     }
   },
+  watch: {
+    tasks: {
+      handler() {
+          const parsed = JSON.stringify(this.tasks)
+          localStorage.setItem('tasks', parsed)
+      },
+      deep: true
+    }
+  },
   methods: {
-    saveTasks() {
-      const parsed = JSON.stringify(this.tasks)
-      localStorage.setItem('tasks', parsed)
-    },
     addTask() {
       if(this.newTask !== '') {
       this.tasks.push({text: this.newTask, completed: false, key: Math.floor((Math.random() * 10e12) + 1)})
       this.newTask = ''
-      this.saveTasks()
       }
     },
     removeTask(key) {
       let indextask = obj => obj.key === key;
       this.tasks.splice((this.tasks.findIndex(indextask)), 1)
-      this.saveTasks()
     }
   },
   computed: {
