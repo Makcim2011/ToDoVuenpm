@@ -1,16 +1,17 @@
 <template>
   <div class="main">
     <div>{{ title }}</div>
-    <label>Додати нове завдання<input v-on:keyup.enter="addTask(), sortTasks(tasks)" v-model="newTask"/></label>
+    <div>{{ tasks }}</div>
+    <label>Додати нове завдання<input v-on:keyup.enter="addTask()" v-model="newTask"/></label>
     <button v-on:click="addTask()">Add Task</button>
     <p v-if="tasks.length">
-    <ul v-for="(task, key) in tasks" :key="`task-${key}`">
+    <ul v-for="task in sortedtasks" :key="task.key">
       <li class="liTask">
-        <input type="checkbox" v-model="task.completed" v-on:change="sortTasks(tasks)">
+        <input type="checkbox" v-model="task.completed">
         <p class="liTaskText"
         :class="{liTaskText_isShow: task.completed}"
         >{{task.text}}</p>
-        <button class="deleteBtn" v-on:click="removeTask(task.key)" role="button">&#10006;{{ `${key}` }}  |  {{task.key}}</button>
+        <button class="deleteBtn" v-on:click="removeTask(task.key)" role="button">&#10006;     |  {{task.key}}</button>
       </li>
     </ul>
     </p>
@@ -38,31 +39,21 @@ export default {
     removeTask(key) {
       let indextask = obj => obj.key === key;
       this.tasks.splice((this.tasks.findIndex(indextask)), 1)
-    },
-    sortTasks(tasks) {
-      tasks.sort((firstItem, secondItem) => firstItem.completed - secondItem.completed)
     }
   },
   computed: {
-  // sortedtasks() {
-  //   function compare(a, b) {
-  //     if (a.completed < b.completed)
-  //       return -1;
-  //     if (a.completed > b.completed)
-  //       return 1;
-  //     return 0;
-  //   }
 
-  //   return this.tasks.sort(compare);
-  // },
-    // completedTasks() {
-    //   return this.tasks.filter(task => task.completed)
-    // },
-    // incompleteTasks() {
-    //   return this.tasks.filter(task => !task.completed)
-    // }
-    
-
+  sortedtasks() {
+      return [].concat(this.tasks).sort(function(a, b) {
+        if (a.completed > b.completed) {
+          return 1;
+        }
+        if (a.completed < b.completed) {
+          return -1;
+        }
+        return 0;
+      })
+    }
   }
 }
 
